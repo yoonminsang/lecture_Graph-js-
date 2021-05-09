@@ -45,6 +45,34 @@ class Graph {
     };
     dfsHelper(vertex, {});
   }
+  Dijkstra(start) {
+    const extractMin = (Q, dist) => {
+      let minDistNode = null,
+        minDist = Infinity;
+      for (let node in Q) {
+        if (dist[node] < minDist) {
+          minDist = dist[node];
+          minDistNode = node;
+        }
+      }
+      return minDistNode;
+    };
+    const Q = { ...this.edges },
+      dist = {};
+    for (let vertex in this.edges) {
+      dist[vertex] = Infinity;
+    }
+    dist[start] = 0;
+    while (Object.keys(Q).length) {
+      const u = extractMin(Q, dist);
+      delete Q[u];
+      for (let adj in this.edges[u]) {
+        const alt = dist[u] + this.edges[u][adj];
+        if (alt < dist[adj]) dist[adj] = alt;
+      }
+    }
+    return dist;
+  }
 }
 const graph = new Graph();
 // graph.addVertex(1);
@@ -58,25 +86,41 @@ const graph = new Graph();
 // console.log(graph);
 // graph.removeVertex(1);
 // console.log(graph);
+
 // Array(6)
 //   .fill()
 //   .map((_, i) => i + 1)
 //   .forEach((v) => {
 //     graph.addVertex(v);
 //   });
-graph.addVertex(1);
-graph.addVertex(2);
-graph.addVertex(3);
-graph.addVertex(4);
-graph.addVertex(5);
-graph.addVertex(6);
-graph.addEdge(1, 2);
-graph.addEdge(1, 3);
-graph.addEdge(2, 4);
-graph.addEdge(2, 5);
-graph.addEdge(3, 4);
-graph.addEdge(3, 4);
-graph.addEdge(3, 6);
-console.log(graph);
+
+// graph.addVertex(1);
+// graph.addVertex(2);
+// graph.addVertex(3);
+// graph.addVertex(4);
+// graph.addVertex(5);
+// graph.addVertex(6);
+// graph.addEdge(1, 2);
+// graph.addEdge(1, 3);
+// graph.addEdge(2, 4);
+// graph.addEdge(2, 5);
+// graph.addEdge(3, 4);
+// graph.addEdge(3, 4);
+// graph.addEdge(3, 6);
+// console.log(graph);
 // console.log(graph.bfs(1));
-console.log(graph.dfs(1));
+// console.log(graph.dfs(1));
+const a = [
+  [1, 2, 1],
+  [2, 3, 3],
+  [5, 2, 2],
+  [1, 4, 2],
+  [5, 3, 1],
+  [5, 4, 2],
+];
+for (let i = 1; i <= 5; i++) graph.addVertex(i);
+a.forEach((v) => {
+  graph.addEdge(v[0], v[1], v[2]);
+});
+// console.log(graph);
+console.log(graph.Dijkstra(1));
