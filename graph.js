@@ -74,7 +74,7 @@ class Graph {
     return dist;
   }
 }
-const graph = new Graph();
+// const graph = new Graph();
 // graph.addVertex(1);
 // graph.addVertex(2);
 // graph.addVertex(3);
@@ -110,17 +110,64 @@ const graph = new Graph();
 // console.log(graph);
 // console.log(graph.bfs(1));
 // console.log(graph.dfs(1));
-const a = [
-  [1, 2, 1],
-  [2, 3, 3],
-  [5, 2, 2],
-  [1, 4, 2],
-  [5, 3, 1],
-  [5, 4, 2],
-];
-for (let i = 1; i <= 5; i++) graph.addVertex(i);
-a.forEach((v) => {
-  graph.addEdge(v[0], v[1], v[2]);
-});
+// const a = [
+//   [1, 2, 1],
+//   [2, 3, 3],
+//   [5, 2, 2],
+//   [1, 4, 2],
+//   [5, 3, 1],
+//   [5, 4, 2],
+// ];
+// for (let i = 1; i <= 5; i++) graph.addVertex(i);
+// a.forEach((v) => {
+//   graph.addEdge(v[0], v[1], v[2]);
+// });
 // console.log(graph);
-console.log(graph.Dijkstra(1));
+// console.log(graph.Dijkstra(1));
+
+const graph = [
+    [0, 1, 1],
+    [0, 2, 2],
+    [1, 2, 5],
+    [1, 3, 1],
+    [2, 3, 8],
+  ],
+  n = 4;
+
+class Kruskal {
+  constructor(n, graph) {
+    this.n = n;
+    this.graph = graph.sort((a, b) => a[2] - b[2]);
+  }
+  findMST() {
+    const getParent = (parent, v) => {
+      if (parent[v] === v) return v;
+      return getParent(parent, parent[v]);
+    };
+    const unionParent = (parent, a, b) => {
+      a = getParent(parent, a);
+      b = getParent(parent, b);
+      a < b ? (parent[b] = a) : (parent[a] = b);
+    };
+    const findParent = (parent, a, b) => {
+      return getParent(parent, a) === getParent(parent, b);
+    };
+    const arr = [];
+    const parent = [
+      ...new Set(this.graph.map((v) => [v[0], v[1]]).flat()),
+    ].sort();
+    let i = 0;
+    console.log(parent);
+    while (arr.length !== this.n - 1) {
+      if (!findParent(parent, this.graph[i][0], this.graph[i][1])) {
+        unionParent(parent, this.graph[i][0], this.graph[i][1]);
+        arr.push(this.graph[i]);
+      }
+      i++;
+    }
+    return arr;
+  }
+}
+
+const kruskal = new Kruskal(n, graph);
+console.log(kruskal.findMST());
